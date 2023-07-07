@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import TodoForm from "./TodoForm";
 import {
   RiCloseCircleLine,
@@ -8,7 +8,6 @@ import {
 import { TiEdit } from "react-icons/ti";
 
 const Todo = ({
-  todos,
   completeTodo,
   removeTodo,
   updateTodo,
@@ -18,6 +17,20 @@ const Todo = ({
     id: null,
     value: "",
   });
+
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    fetch('https://todo-api-h8ov.onrender.com/api') 
+      .then(response => response.json())
+      .then(data => {
+        setTodos(data.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener los datos:", error);
+      });
+  }, []);
+
 
   const submitUpdate = (value) => {
     updateTodo(edit.id, value);
@@ -31,6 +44,8 @@ const Todo = ({
     return <TodoForm edit={edit} onSubmit={submitUpdate} />;
   }
 
+
+  console.log(typeof todos);
   return todos.map((todo, index) => (
     // <div>
     <div
@@ -43,7 +58,8 @@ const Todo = ({
           onClick={() => completeTodo(todo.id)}
           className="todo"
         >
-          {todo.text}
+          Id: {todo.id} | Title: {todo.title} | 
+          Description: {todo.description}
         </div>
         <div className="icons">
           <RiCheckboxCircleLine
