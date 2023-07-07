@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
-import { useEffect } from "react";
+
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    console.log(todos);
+    fetch('https://todo-api-h8ov.onrender.com/api') 
+      .then(response => response.json())
+      .then(data => {
+        setTodos(data.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener los datos:", error);
+      });
+  }, []);
+
+
+  useEffect(() => {
+    console.log('dfsdf', todos);
   }, [todos]);
 
   const addTodo = (todo) => {
