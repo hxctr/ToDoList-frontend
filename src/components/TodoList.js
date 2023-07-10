@@ -7,7 +7,7 @@ function TodoList() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    fetch('https://todo-api-h8ov.onrender.com/api') 
+    fetch('http://localhost:9000/api') 
       .then(response => response.json())
       .then(data => {
         setTodos(data.data);

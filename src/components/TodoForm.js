@@ -3,13 +3,14 @@ import { BsArrowDown, BsPlusCircleFill } from "react-icons/bs";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 
 function TodoForm(props) {
-
-  //esto es para los inputs principales
   const [input, setInput] = useState(props.edit ? props.edit.value : "");
   const [showDescription, setShowDescription] = useState(false);
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ""
   );
+
+  const [newInput, setNewInput] = useState("");
+  const [newDescription, setNewDescription] = useState("");
 
   const inputRef = useRef(null);
 
@@ -28,26 +29,13 @@ function TodoForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    //este si es para los todos list
-    props.onSubmit({
-      id: Math.floor(Math.random() * 10000),
-      text: input,
-      description,
-      isDone: false,
-      showDescription: true,
-    });
-
-
-    //este objeto es para el fetch con el POST
+  
     const todoData = {
-      title: input,
-      description: description
+      title: input.trim(),
+      description: description.trim()
     };
-
-    //--
-    // peticion POST para aniadir un nuevo todo
-    fetch('https://todo-api-h8ov.onrender.com/api', {
+  
+    fetch('http://localhost:9000/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -56,24 +44,30 @@ function TodoForm(props) {
     })
       .then(response => {
         if (response.ok) {
-          console.log("Datos enviados exitosamente");
+          console.log('Datos enviados exitosamente');
+          setInput('');
+          setDescription('');
         } else {
-          throw new Error("Error en la petición");
+          console.error('Error en la petición');
         }
       })
       .catch(error => {
-        console.error("Error al enviar los datos:", error);
+        console.error('Error al enviar los datos:', error);
       });
-    //--
-    setInput("");
-    setDescription("");
+  };
+
+  const handleNewInputChange = (e) => {
+    setNewInput(e.target.value);
+  };
+
+  const handleNewDescriptionChange = (e) => {
+    setNewDescription(e.target.value);
   };
 
   return (
     <form onSubmit={handleSubmit} className="todo-form">
       {props.edit ? (
         <div className="todo-form--update">
-          {/* de aquí abajo es para mostrar unos campos para actualizar */}
           <input
             placeholder="Update your item"
             value={input}
@@ -96,7 +90,6 @@ function TodoForm(props) {
         </div>
       ) : (
         <>
-          {/* Aquí para abajo es para añadir un nuevo to-do */}
           <input
             placeholder="Add a todo"
             value={input}
@@ -120,6 +113,22 @@ function TodoForm(props) {
               className="todo-input todo-description"
             />
           )}
+
+          {/* Nuevo input y textarea */}
+          <div>
+            <input
+              placeholder="New input"
+              value={newInput}
+              onChange={handleNewInputChange}
+              className="todo-input"
+            />
+            <textarea
+              placeholder="New textarea"
+              value={newDescription}
+              onChange={handleNewDescriptionChange}
+              className="todo-input todo-description"
+            />
+          </div>
         </>
       )}
     </form>
@@ -127,3 +136,6 @@ function TodoForm(props) {
 }
 
 export default TodoForm;
+//chat ya me creo lo de ponerme unos inpus
+//tengo que ver lo del boton para esos inputs
+//tengo que ver como me creo los usestates chat
