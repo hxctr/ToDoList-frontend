@@ -29,12 +29,12 @@ function TodoForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const todoData = {
       title: input.trim(),
       description: description.trim()
     };
-  
+
     fetch('http://localhost:9000/api', {
       method: 'POST',
       headers: {
@@ -47,6 +47,35 @@ function TodoForm(props) {
           console.log('Datos enviados exitosamente');
           setInput('');
           setDescription('');
+        } else {
+          console.error('Error en la petición');
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar los datos:', error);
+      });
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+
+    const todoData = {
+      id: newInput.trim(),
+      description: newDescription.trim()
+    };
+
+    fetch('http://localhost:9000/api', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(todoData)
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Datos actualizados exitosamente');
+          setNewInput('');
+          setNewDescription('');
         } else {
           console.error('Error en la petición');
         }
@@ -117,17 +146,20 @@ function TodoForm(props) {
           {/* Nuevo input y textarea */}
           <div>
             <input
-              placeholder="New input"
+              placeholder="Ingrese id"
               value={newInput}
               onChange={handleNewInputChange}
               className="todo-input"
             />
             <textarea
-              placeholder="New textarea"
+              placeholder="Digite la nueva descripcion"
               value={newDescription}
               onChange={handleNewDescriptionChange}
               className="todo-input todo-description"
             />
+            <button onClick={handleEdit} className="todo-button">
+              <BsPlusCircleFill />
+            </button>
           </div>
         </>
       )}
@@ -136,6 +168,3 @@ function TodoForm(props) {
 }
 
 export default TodoForm;
-//chat ya me creo lo de ponerme unos inpus
-//tengo que ver lo del boton para esos inputs
-//tengo que ver como me creo los usestates chat
