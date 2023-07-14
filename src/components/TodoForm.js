@@ -12,6 +12,8 @@ function TodoForm(props) {
   const [newInput, setNewInput] = useState("");
   const [newDescription, setNewDescription] = useState("");
 
+  const [newDelete, setNewInputDelete] = useState("");
+
   const inputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -26,6 +28,38 @@ function TodoForm(props) {
     e.preventDefault();
     setShowDescription(!showDescription);
   };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    
+    const todoid = {
+      id: newDelete
+    };
+
+    fetch('http://localhost:9000/api', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(todoid)
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('Todo deleted successfully');
+        alert(`To-do #${todoid.id} deleted`)
+      } else {
+        throw new Error('Error deleting todo');
+        
+        
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting todo:', error);
+      alert(`To-do #${todoid.id} does not exist`)
+    });
+
+
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,6 +122,10 @@ function TodoForm(props) {
   const handleNewInputChange = (e) => {
     setNewInput(e.target.value);
   };
+
+  const handleDeleteInput = (e) => {
+    setNewInputDelete(e.target.value);
+  }
 
   const handleNewDescriptionChange = (e) => {
     setNewDescription(e.target.value);
@@ -161,6 +199,18 @@ function TodoForm(props) {
               <BsPlusCircleFill />
             </button>
           </div>
+
+          {/* Aquí pongo el nuevo input para eliminar */}
+          <input
+            placeholder="Ingrese ID"
+            value={newDelete}
+            onChange={handleDeleteInput}
+            className="todo-input"
+          />
+          <button onClick={handleDelete} className="todo-button">
+            Eliminar
+          </button>
+          {/* lo finalizo acá */}
         </>
       )}
     </form>
