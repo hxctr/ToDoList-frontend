@@ -81,6 +81,7 @@ function TodoForm(props) {
           console.log('Datos enviados exitosamente');
           setInput('');
           setDescription('');
+          alert('Nuevo To-do agregado a la lista')
         } else {
           console.error('Error en la petición');
         }
@@ -108,6 +109,7 @@ function TodoForm(props) {
       .then(response => {
         if (response.ok) {
           console.log('Datos actualizados exitosamente');
+          alert('Datos actualizados correctamente')
           setNewInput('');
           setNewDescription('');
         } else {
