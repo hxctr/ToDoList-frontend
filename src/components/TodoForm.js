@@ -183,6 +183,7 @@ function TodoForm(props) {
 
           {/* Nuevo input y textarea */}
           <div>
+            <h2>Editar To-do</h2>
             <input
               placeholder="Ingrese id"
               value={newInput}
@@ -201,6 +202,7 @@ function TodoForm(props) {
           </div>
 
           {/* Aquí pongo el nuevo input para eliminar */}
+          <h2>Eliminar To-do</h2>
           <input
             placeholder="Ingrese ID"
             value={newDelete}
