@@ -55,7 +55,7 @@ const Todo = ({
           onClick={() => completeTodo(todo.id)}
           className="todo"
         >
-          Id: {todo.id} | Title: {todo.title} | Description: {todo.description}
+          Id: {todo.id} | Title: {todo.title} | Description: {todo.description} | State: {todo.state}
         </div>
         <div className="icons">
           <RiCheckboxCircleLine

@@ -13,8 +13,14 @@ function TodoForm(props) {
   const [newDescription, setNewDescription] = useState("");
 
   const [newDelete, setNewInputDelete] = useState("");
+  const [newes, setnewes] = useState("");
 
   const inputRef = useRef(null);
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleChangeDrop = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
   const handleChange = (e) => {
     setInput(e.target.value);
@@ -29,34 +35,67 @@ function TodoForm(props) {
     setShowDescription(!showDescription);
   };
 
+  const handleState = (e) => {
+    e.preventDefault();
+    console.log('cambiando state')
+
+    const requestData = {
+      id: newes,
+      state: selectedOption === "true" ? true : false
+    };
+
+
+    fetch("http://localhost:9000/api/state", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(requestData)
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log("Petición exitosa");
+        alert('Estado cambiado')
+      } else {
+        console.error("Error en la petición");
+      }
+    })
+    .catch(error => {
+      console.error("Error al enviar la solicitud:", error);
+    });
+
+
+    
+  }
+
   const handleDelete = (e) => {
     e.preventDefault();
-    
+
     const todoid = {
       id: newDelete
     };
 
     fetch('http://localhost:9000/api', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(todoid)
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('Todo deleted successfully');
-        alert(`To-do #${todoid.id} deleted`)
-      } else {
-        throw new Error('Error deleting todo');
-        
-        
-      }
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(todoid)
     })
-    .catch(error => {
-      console.error('Error deleting todo:', error);
-      alert(`To-do #${todoid.id} does not exist`)
-    });
+      .then(response => {
+        if (response.ok) {
+          console.log('Todo deleted successfully');
+          alert(`To-do #${todoid.id} deleted`)
+        } else {
+          throw new Error('Error deleting todo');
+
+
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting todo:', error);
+        alert(`To-do #${todoid.id} does not exist`)
+      });
 
 
   }
@@ -127,6 +166,10 @@ function TodoForm(props) {
 
   const handleDeleteInput = (e) => {
     setNewInputDelete(e.target.value);
+  }
+
+  const handleStateInput = (e) => {
+    setnewes(e.target.value);
   }
 
   const handleNewDescriptionChange = (e) => {
@@ -215,6 +258,29 @@ function TodoForm(props) {
             Eliminar
           </button>
           {/* lo finalizo acá */}
+
+          {/* -------------------------------- */}
+
+          {/* aqui comienzan los inputs para el state */}
+          <div>
+            <h2>Cambiar state</h2>
+            <input
+            placeholder="Ingrese ID"
+            value={newes}
+            onChange={handleStateInput}
+            className="todo-input"
+          />
+            <select value={selectedOption} onChange={handleChangeDrop} className="todo-input">
+              <option value="">Selecciona una opcion</option>
+              <option value="true">Done</option>
+              <option value="false">Undone</option>
+            </select>
+            <button onClick={handleState} className="todo-button">
+              Cambiar
+            </button>
+
+          </div>
+          {/* aqui finalizan los inputs del state */}
         </>
       )}
     </form>
